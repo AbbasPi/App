@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="tailwindcss.css">
+    <title>tasks</title>
+</head>
+
+<body class=" bg-gray-100">
+
+    <div id="app">
+        <div class="mx-auto max-w-xl">
+
+            <div class="flex justify-center">
+                <input autofocus v-model="task" @keydown.enter="showTask(); " type=" text " placeholder="what are your tasks for today sweetie" class=" rounded-md outline-none border-2 shadow-md focus:border-blue-400 hover:border-blue-200  w-5/6 p-1 mt-8 ">
+            </div>
+
+            <div class="mt-32">
+                <header v-if="curentMessage == 'Current tasks'" class="underline font-bold ">
+                    {{curentMessage}}
+                </header>
+                <header v-if="curentMessage == 'Current tasks is empty' || curentMessage == ''" class=" border p-2 border-2 bg-gray-700 text-white rounded-md ">
+                    {{curentMessage}}
+                </header>
+                <div class=" w-full bg-white rounded-md p-2 mt-4 flex justify-between" v-for="(todo, index) in cTask">
+                    <p class=" p-1 px-4 font-semibold ">{{todo}}</p>
+                    <div>
+                        <button @click="later(index)" class="w-24 mr-7 hover bg-blue-400 text-white p-1 rounded-md px-4 font-mono hover:bg-white hover:text-blue-400 border hover:border-2 hover:border-blue-400 ">later</button>
+                        <button @click="removeTask(index)" class="w-24 mr-2 hover bg-red-400 text-white p-1 rounded-md px-4 font-mono hover:bg-white hover:text-red-400 border hover:border-2 hover:border-red-400 ">delete</button></div>
+
+                </div>
+            </div>
+            <div class="mt-12">
+                <header v-if="laterMessage == 'Later tasks'" class=" underline font-bold ">
+                    {{laterMessage}}
+                </header>
+                <header v-if="laterMessage == 'Later tasks is empty' || laterMessage == ''" class="border p-2 border-2 bg-gray-700 text-white rounded-md ">
+                    {{laterMessage}}
+                </header>
+                <div class=" w-full bg-white rounded-md p-2 mt-4 flex justify-between " v-for="(thing, index) in lTask">
+                    <p class=" p-1 px-4 font-semibold ">{{thing}}</p>
+                    <div>
+                        <button @click="current(index)" class=" mr-7  bg-green-400 text-white p-1 rounded-md px-4 font-mono hover:bg-white hover:text-green-400 border hover:border-2 hover:border-green-400">current</button>
+                        <button @click="removeTodo2(index)" class=" mr-2 w-24 bg-red-400 text-white p-1 rounded-md px-4 font-mono hover:bg-white hover:text-red-400 border hover:border-2 hover:border-red-400">delete</button></div>
+
+                </div>
+            </div>
+            <div class=" mt-24"></div>
+        </div>
+
+    </div>
+
+    <script src="vue.js "></script>
+    <script>
+        let app = new Vue({
+            el: '#app',
+
+            data: {
+                newTask: '',
+                task: '',
+                cTask: [],
+                lTask: [],
+                curentMessage: 'Current tasks is empty',
+                laterMessage: 'Later tasks is empty',
+            },
+            methods: {
+                taskcheck() {
+                    if (this.cTask.length == 0) {
+                        this.curentMessage = 'Current tasks is empty'
+                    }
+                    if (this.lTask.length == 0) {
+                        this.laterMessage = 'Later tasks is empty'
+                    }
+                },
+                showTask() {
+                    this.newTask = this.task
+                    this.task = ''
+                    if (this.newTask != '') {
+                        this.cTask.push(this.newTask)
+                        this.curentMessage = 'Current tasks'
+
+                    }
+                    this.taskcheck()
+
+
+                },
+
+                removeTask(index) {
+                    this.cTask.splice(index, 1)
+                    this.taskcheck()
+                },
+                removeTodo2(index) {
+                    this.lTask.splice(index, 1)
+                    this.taskcheck()
+                },
+
+                later(index) {
+                    this.lTask.splice(1, 0, this.cTask[index])
+                    this.cTask.splice(index, 1)
+                    this.laterMessage = 'Later tasks'
+                    this.taskcheck()
+                },
+                current(index) {
+                    this.cTask.splice(1, 0, this.lTask[index])
+                    this.lTask.splice(index, 1)
+                    this.curentMessage = 'Current tasks'
+                    this.taskcheck()
+                }
+            },
+
+
+
+
+        })
+    </script>
+</body>
+
+</html>
